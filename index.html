@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reseller License Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #ffffff;
+            font-family: 'Inter', sans-serif;
+            color: #000000;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+        .container {
+            max-width: 90rem;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        .header {
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header .container {
+            padding: 0.5rem 1rem;
+        }
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.2s ease;
+        }
+        .card:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        .license-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+        }
+        .license-table th {
+            background: #f7f7f7;
+            color: #000000;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #e5e5e5;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .license-table td {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .license-table tr:hover {
+            background: #f7f7f7;
+        }
+        .mobile-license-list {
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .mobile-license-card {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .mobile-license-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .mobile-license-key {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #333333;
+            word-break: break-word;
+            max-width: 60%;
+        }
+        .mobile-license-details {
+            display: none;
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            animation: slideDown 0.3s ease-out;
+        }
+        .mobile-license-details.active {
+            display: block;
+        }
+        .mobile-license-field {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .mobile-license-field-label {
+            font-weight: 600;
+            color: #333333;
+            width: 40%;
+        }
+        .mobile-license-field-value {
+            color: #000000;
+            width: 60%;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+        .mobile-license-field-value::-webkit-scrollbar {
+            height: 4px;
+        }
+        .mobile-license-field-value::-webkit-scrollbar-thumb {
+            background: #e5e5e5;
+            border-radius: 2px;
+        }
+        .btn-primary {
+            background: #333333;
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        .btn-primary:hover {
+            background: #000000;
+        }
+        .btn-danger {
+            background: #333333;
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        .btn-danger:hover {
+            background: #000000;
+        }
+        .btn-outline-primary {
+            border: 1px solid #333333;
+            color: #333333;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .btn-outline-primary:hover {
+            background: #333333;
+            color: #ffffff;
+        }
+        .btn-profile {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            color: #333333;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            position: relative;
+            cursor: pointer;
+        }
+        .btn-profile:hover {
+            background: #f7f7f7;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            min-width: 12rem;
+            padding: 0.5rem;
+        }
+        .profile-dropdown.active {
+            display: block;
+        }
+        .profile-dropdown-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: #333333;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .profile-dropdown-item:hover {
+            background: #f7f7f7;
+        }
+        .btn-toggle {
+            background: none;
+            border: none;
+            color: #333333;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            transition: background 0.2s ease;
+        }
+        .btn-toggle:hover {
+            background: #f7f7f7;
+        }
+        .alert {
+            display: none;
+            border: 1px solid #333333;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            font-size: 0.875rem;
+            background: #ffffff;
+            color: #000000;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .search-input {
+            border: 1px solid #e5e5e5;
+            border-radius: 0.375rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            width: 100%;
+            transition: border-color 0.2s ease;
+            background: #ffffff;
+        }
+        .search-input:focus {
+            border-color: #333333;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(51, 51, 51, 0.1);
+        }
+        .form-select, .form-control {
+            border: 1px solid #e5e5e5;
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            font-size: 0.875rem;
+            transition: border-color 0.2s ease;
+            background: #ffffff;
+        }
+        .form-select:focus, .form-control:focus {
+            border-color: #333333;
+            box-shadow: 0 0 0 2px rgba(51, 51, 51, 0.1);
+        }
+        .balance-info {
+            font-size: 0.875rem;
+            color: #333333;
+        }
+        .balance-value {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+                padding: 0.5rem;
+            }
+            .license-table {
+                display: none;
+            }
+            .mobile-license-list {
+                display: flex;
+            }
+            .btn-sm {
+                font-size: 0.75rem;
+                padding: 0.5rem 1rem;
+                min-width: 4rem;
+            }
+            .profile-dropdown {
+                right: 0.5rem;
+                min-width: 10rem;
+            }
+        }
+        @media (min-width: 769px) {
+            .mobile-license-list {
+                display: none;
+            }
+            .license-table {
+                display: table;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h1 class="text-2xl font-bold">Vision</h1>
+            <div class="flex items-center space-x-4">
+                <div class="balance-info">
+                    <span id="balanceTitle" class="font-medium">Current Balance:</span>
+                    <span id="balance" class="balance-value">0</span>
+                </div>
+                <div class="position-relative">
+                    <button class="btn-profile" id="profileButton"></button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="profile-dropdown-item">
+                            <span class="font-medium">Total Sales:</span>
+                            <span id="totalSales" class="text-sm">0</span>
+                        </div>
+                        <div class="profile-dropdown-item" onclick="logout()">Logout</div>
+                    </div>
+                </div>
+                <a href="admin.html" id="adminLink" class="btn btn-outline-primary" style="display: none;">Admin Panel</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Error Alert -->
+        <div id="errorAlert" class="alert" role="alert"></div>
+
+        <!-- License Actions -->
+        <div class="row my-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body p-6">
+                        <h5 class="text-lg font-semibold mb-4">Generate License</h5>
+                        <form id="generateForm">
+                            <div class="mb-4">
+                                <label for="licenseType" class="form-label text-sm font-medium">License Type</label>
+                                <select class="form-select" id="licenseType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="Vision-Day">Vision Day (100)</option>
+                                    <option value="Vision-Week">Vision Week (450)</option>
+                                    <option value="Lethal-Day">Lethal Day (100)</option>
+                                    <option value="Lethal-Week">Lethal Week (450)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Generate License</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- License History -->
+        <div class="card">
+            <div class="card-body p-6">
+                <h5 class="text-lg font-semibold mb-4">Generated Licenses</h5>
+                <div class="mb-4">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search by License Key, HWID, Brand, Model, or IP">
+                </div>
+                <div class="table-responsive">
+                    <!-- Desktop Table -->
+                    <table class="license-table">
+                        <thead>
+                            <tr>
+                                <th>License Key</th>
+                                <th>Expiry Time</th>
+                                <th>Generated Time</th>
+                                <th>Last Login</th>
+                                <th>HWID</th>
+                                <th>Brand</th>
+                                <th>Model</th>
+                                <th>Android</th>
+                                <th>IP</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="licenseTableBody"></tbody>
+                    </table>
+                    <!-- Mobile List -->
+                    <div class="mobile-license-list" id="mobileLicenseList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE_URL = 'http://localhost:3000';
+        const sessionId = localStorage.getItem('sessionId');
+        const username = localStorage.getItem('username');
+        const userLevel = localStorage.getItem('level');
+        const balance = localStorage.getItem('balance');
+
+        // Check authentication
+        if (!sessionId || !username) {
+            window.location.href = 'login.html';
+        } else {
+            document.getElementById('profileButton').textContent = `${username}`;
+            document.getElementById('balance').textContent = balance || 0;
+            document.getElementById('balanceTitle').textContent = userLevel === 'level1' ? 'Due Balance:' : 'Current Balance:';
+            if (userLevel === 'admin') {
+                document.getElementById('adminLink').style.display = 'inline-block';
+            }
+        }
+
+        function showError(message) {
+            const alert = document.getElementById('errorAlert');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            setTimeout(() => alert.style.display = 'none', 7000);
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+
+        // Profile dropdown toggle
+        const profileButton = document.getElementById('profileButton');
+        const profileDropdown = document.getElementById('profileDropdown');
+        profileButton.addEventListener('click', () => {
+            profileDropdown.classList.toggle('active');
+        });
+        document.addEventListener('click', (e) => {
+            if (!profileButton.contains(e.target) && !profileDropdown.contains(e.target)) {
+                profileDropdown.classList.remove('active');
+            }
+        });
+
+        async function loadBalance() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/balance`, {
+                    headers: { 'X-Session-ID': sessionId }
+                });
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        logout();
+                    }
+                    const errorText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                }
+                const data = await response.json();
+                document.getElementById('balance').textContent = data.balance || 0;
+                document.getElementById('totalSales').textContent = data.total_sales || 0;
+                localStorage.setItem('balance', data.balance);
+            } catch (error) {
+                console.error('Error loading balance:', error);
+                showError(`Failed to load balance: ${error.message}`);
+            }
+        }
+
+        async function loadLicenses() {
+            try {
+                const desktopTableBody = document.getElementById('licenseTableBody');
+                const mobileLicenseList = document.getElementById('mobileLicenseList');
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const response = await fetch(`${API_BASE_URL}/licenses`, {
+                    headers: { 'X-Session-ID': sessionId }
+                });
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        logout();
+                    }
+                    const errorText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                }
+                const data = await response.json();
+                console.log('Licenses data:', data); // Debug
+                if (data.licenses && Array.isArray(data.licenses)) {
+                    // Filter licenses based on search term
+                    const filteredLicenses = data.licenses.filter(license =>
+                        license.key.toLowerCase().includes(searchTerm) ||
+                        license.hwid.toLowerCase().includes(searchTerm) ||
+                        (license.brand || '').toLowerCase().includes(searchTerm) ||
+                        (license.model || '').toLowerCase().includes(searchTerm) ||
+                        license.ip.toLowerCase().includes(searchTerm)
+                    );
+
+                    // Create desktop table rows
+                    const desktopRows = filteredLicenses.map(license => {
+                        const row = document.createElement('tr');
+                        row.setAttribute('data-key', license.key);
+                        row.innerHTML = `
+                            <td>${license.key || 'N/A'}</td>
+                            <td>${license.expiry_time || 'N/A'}</td>
+                            <td>${license.generated_time || 'N/A'}</td>
+                            <td>${license.last_login || 'N/A'}</td>
+                            <td>${license.hwid || 'N/A'}</td>
+                            <td>${license.brand || 'N/A'}</td>
+                            <td>${license.model || 'N/A'}</td>
+                            <td>${license.android || 'N/A'}</td>
+                            <td>${license.ip || 'N/A'}</td>
+                            <td><button class="btn btn-danger btn-sm" onclick="resetLicense('${license.key}')">Reset</button></td>
+                        `;
+                        return row;
+                    });
+
+                    // Create mobile license cards
+                    const mobileCards = filteredLicenses.map(license => {
+                        const card = document.createElement('div');
+                        card.className = 'mobile-license-card';
+                        card.setAttribute('data-key', license.key);
+                        card.innerHTML = `
+                            <div class="mobile-license-header">
+                                <span class="mobile-license-key">${license.key || 'N/A'}</span>
+                                <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); resetLicense('${license.key}')">Reset</button>
+                            </div>
+                            <div class="mobile-license-field">
+                                <span class="mobile-license-field-label">Expiry Time:</span>
+                                <span class="mobile-license-field-value">${license.expiry_time || 'N/A'}</span>
+                            </div>
+                            <button class="btn-toggle" onclick="toggleDetails('${license.key}')">Show Details</button>
+                            <div class="mobile-license-details" id="details-${license.key}">
+                                <div class="mobile-license-field">
+                                    <span class="mobile-license-field-label">Generated Time:</span>
+                                    <span class="mobile-license-field-value">${license.generated_time || 'N/A'}</span>
+                                </div>
+                                <div class="mobile-license-field">
+                                    <span class="mobile-license-field-label">Last Login:</span>
+                                    <span class="mobile-license-field-value">${license.last_login || 'N/A'}</span>
+                                </div>
+                                <div class="mobile-license-field">
+                                    <span class="mobile-license-field-label">HWID:</span>
+                                    <span class="mobile-license-field-value">${license.hwid || 'N/A'}</span>
+                                </div>
+                                <div class="mobile-license-field">
+                                    <span class="mobile-license-field-label">Brand:</span>
+                                    <span class="mobile-license-field-value">${license.brand || 'N/A'}</span>
+                                </div>
+                                <div class="mobile-license-field">
+                                    <span class="mobile-license-field-label">Model:</span>
+                                    <span class="mobile-license-field-value">${license.model || 'N/A'}</span>
+                                </div>
+                                <div class="mobile-license-field">
+                                    <span class="mobile-license-field-label">Android:</span>
+                                    <span class="mobile-license-field-value">${license.android || 'N/A'}</span>
+                                </div>
+                                <div class="mobile-license-field">
+                                    <span class="mobile-license-field-label">IP:</span>
+                                    <span class="mobile-license-field-value">${license.ip || 'N/A'}</span>
+                                </div>
+                            </div>
+                        `;
+                        return card;
+                    });
+
+                    // Update desktop table and mobile list
+                    desktopTableBody.innerHTML = '';
+                    mobileLicenseList.innerHTML = '';
+                    desktopRows.forEach(row => desktopTableBody.appendChild(row));
+                    mobileCards.forEach(card => mobileLicenseList.appendChild(card));
+
+                    // Handle empty state
+                    if (filteredLicenses.length === 0) {
+                        desktopTableBody.innerHTML = '<tr><td colspan="10" class="text-center">No licenses found.</td></tr>';
+                        mobileLicenseList.innerHTML = '<div class="text-center text-sm text-gray-500">No licenses found.</div>';
+                    }
+                } else {
+                    console.warn('Invalid licenses format:', data);
+                    showError('Invalid licenses data received from server.');
+                }
+            } catch (error) {
+                console.error('Error loading licenses:', error);
+                showError(`Failed to load licenses: ${error.message}`);
+            }
+        }
+
+        function toggleDetails(key) {
+            const details = document.getElementById(`details-${key}`);
+            const isActive = details.classList.contains('active');
+            document.querySelectorAll('.mobile-license-details.active').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            if (!isActive) {
+                details.classList.add('active');
+            }
+        }
+
+        document.getElementById('generateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const [product, duration] = document.getElementById('licenseType').value.split('-');
+            if (!product || !duration) {
+                showError('Please select a license type.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/generate-license`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Session-ID': sessionId
+                    },
+                    body: JSON.stringify({ product, duration })
+                });
+                const data = await response.json();
+                console.log('Generate license response:', data); // Debug
+                if (data.success) {
+                    alert(`License generated: ${data.key}`);
+                    loadBalance();
+                    loadLicenses();
+                } else {
+                    console.error('Generate license error response:', data);
+                    showError(`Error generating license: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error generating license:', error);
+                showError(`Server error during license generation: ${error.message}`);
+            }
+        });
+
+        async function resetLicense(key) {
+            if (!confirm(`Are you sure you want to reset license ${key}?`)) return;
+            try {
+                const response = await fetch(`${API_BASE_URL}/reset-license`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Session-ID': sessionId
+                    },
+                    body: JSON.stringify({ key })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(data.message);
+                    loadLicenses();
+                } else {
+                    console.error('Reset license error response:', data);
+                    showError(`Error resetting license: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error resetting license:', error);
+                showError(`Server error during license reset: ${error.message}`);
+            }
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', () => {
+            loadLicenses();
+        });
+
+        // Initial load and polling
+        loadBalance();
+        loadLicenses();
+        setInterval(loadLicenses, 5000);
+    </script>
+</body>
+</html>
