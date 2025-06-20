@@ -15,7 +15,7 @@ app.use(express.json());
 const sessions = {};
 const licenseCache = new Map();
 
-const API_URL = 'http://127.0.0.1:8555/';
+const API_URL = 'https://xapilethalxvision.global.ssl.fastly.net/';
 const AUTH_TOKEN = 'DDJgwS2wUIoKnIn9qkc0yqMarrhf59XaaZe79I0A5NC49QBLqlN7aD5PnvqvtCAQ';
 const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36';
 const LICENSES_CSV = 'licenses.csv';
@@ -31,13 +31,14 @@ if (!fs.existsSync(LICENSES_CSV)) {
 
 // Initialize users.csv
 if (!fs.existsSync(USERS_CSV)) {
-    const headers = ['username', 'password', 'balance', 'level', 'total_sales'];
+    const headers = ['username', 'password', 'balance', 'level', 'total_sales', 'credit_limit'];
     const defaultAdmin = {
         username: 'admin',
         password: 'admin123',
         balance: 1000,
         level: 'admin',
-        total_sales: 0
+        total_sales: 0,
+        credit_limit: 0 // Admin has no credit limit
     };
     const csvData = parse([defaultAdmin], { fields: headers });
     fs.writeFileSync(USERS_CSV, csvData + '\n', 'utf8');
@@ -99,7 +100,7 @@ async function readUsers() {
     return new Promise((resolve, reject) => {
         const users = [];
         fs.createReadStream(USERS_CSV)
-            .pipe(csv(['username', 'password', 'balance', 'level', 'total_sales']))
+            .pipe(csv(['username', 'password', 'balance', 'level', 'total_sales', 'credit_limit']))
             .on('data', (row) => {
                 if (row.username && row.password && !isNaN(parseInt(row.balance, 10)) && row.level) {
                     users.push({
@@ -107,7 +108,8 @@ async function readUsers() {
                         password: row.password.trim(),
                         balance: parseInt(row.balance, 10),
                         level: row.level.trim(),
-                        total_sales: parseInt(row.total_sales, 10) || 0
+                        total_sales: parseInt(row.total_sales, 10) || 0,
+                        credit_limit: parseInt(row.credit_limit, 10) || 0
                     });
                 }
             })
@@ -118,19 +120,24 @@ async function readUsers() {
 
 // Helper to update users.csv
 async function updateUsers(users) {
-    const csvData = parse(users, { fields: ['username', 'password', 'balance', 'level', 'total_sales'] });
+    const csvData = parse(users, { fields: ['username', 'password', 'balance', 'level', 'total_sales', 'credit_limit'] });
     fs.writeFileSync(USERS_CSV, csvData + '\n', 'utf8');
     console.log('Updated users.csv');
 }
 
-// Helper to update user balance and sales
-async function updateUserBalanceAndSales(username, newBalance, newSales) {
+// Helper to update user balance, sales, and credit limit
+async function updateUserBalanceAndSales(username, newBalance, newSales, creditLimit = null) {
     const users = await readUsers();
     const updatedUsers = users.map(user =>
-        user.username === username ? { ...user, balance: newBalance, total_sales: newSales } : user
+        user.username === username ? {
+            ...user,
+            balance: newBalance,
+            total_sales: newSales,
+            credit_limit: creditLimit !== null ? creditLimit : user.credit_limit
+        } : user
     );
     await updateUsers(updatedUsers);
-    console.log(`Updated balance for ${username}: ${newBalance}, sales: ${newSales}`);
+    console.log(`Updated balance for ${username}: ${newBalance}, sales: ${newSales}, credit_limit: ${creditLimit !== null ? creditLimit : updatedUsers.find(u => u.username === username).credit_limit}`);
 }
 
 // Background poller for license details
@@ -210,7 +217,7 @@ app.post('/login', async (req, res) => {
 
         const sessionId = Math.random().toString(36).substring(2);
         sessions[sessionId] = { username: user.username, level: user.level };
-        res.json({ success: true, sessionId, user: { username: user.username, balance: user.balance, level: user.level, total_sales: user.total_sales } });
+        res.json({ success: true, sessionId, user: { username: user.username, balance: user.balance, level: user.level, total_sales: user.total_sales, credit_limit: user.credit_limit } });
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ error: 'Server error during login' });
@@ -235,6 +242,9 @@ app.post('/generate-license', requireAuth, async (req, res) => {
         const user = users.find(u => u.username === username);
         if (user.level === 'level2' && user.balance < cost) {
             return res.status(400).json({ error: 'Insufficient balance' });
+        }
+        if (user.level === 'level1' && user.balance + cost > user.credit_limit) {
+            return res.status(400).json({ error: `Credit limit (${user.credit_limit}) exceeded. Current balance: ${user.balance}, Cost: ${cost}` });
         }
 
         const response = await axios.post(API_URL, {}, {
@@ -354,8 +364,8 @@ app.get('/balance', requireAuth, async (req, res) => {
     try {
         const users = await readUsers();
         const user = users.find(u => u.username === username);
-        console.log(`Returning balance for ${username}: ${user.balance}`);
-        res.json({ balance: user.balance, total_sales: user.total_sales });
+        console.log(`Returning balance for ${username}: ${user.balance}, credit_limit: ${user.credit_limit}`);
+        res.json({ balance: user.balance, total_sales: user.total_sales, credit_limit: user.credit_limit });
     } catch (error) {
         console.error('Error reading balance:', error);
         res.status(500).json({ error: 'Failed to read balance' });
@@ -410,9 +420,9 @@ app.get('/admin/users', requireAuth, requireAdmin, async (req, res) => {
 
 // Admin: Create User
 app.post('/admin/users', requireAuth, requireAdmin, async (req, res) => {
-    const { username, password, level } = req.body;
-    if (!username || !password || !['level1', 'level2'].includes(level)) {
-        return res.status(400).json({ error: 'Invalid user data. Username, password, and level (level1 or level2) required.' });
+    const { username, password, level, credit_limit } = req.body;
+    if (!username || !password || !['level1', 'level2'].includes(level) || (level === 'level1' && (isNaN(credit_limit) || credit_limit < 0))) {
+        return res.status(400).json({ error: 'Invalid user data. Username, password, level (level1 or level2), and credit_limit (non-negative for level1) required.' });
     }
 
     try {
@@ -426,7 +436,8 @@ app.post('/admin/users', requireAuth, requireAdmin, async (req, res) => {
             password,
             balance: 0,
             level,
-            total_sales: 0
+            total_sales: 0,
+            credit_limit: level === 'level1' ? parseInt(credit_limit, 10) : 0
         };
         users.push(newUser);
         await updateUsers(users);
@@ -440,9 +451,9 @@ app.post('/admin/users', requireAuth, requireAdmin, async (req, res) => {
 // Admin: Update User
 app.post('/admin/users/:username', requireAuth, requireAdmin, async (req, res) => {
     const { username } = req.params;
-    const { newUsername, password, level } = req.body;
-    if (!newUsername || !password || !['level1', 'level2'].includes(level)) {
-        return res.status(400).json({ error: 'Invalid user data' });
+    const { newUsername, password, level, credit_limit } = req.body;
+    if (!newUsername || !password || !['level1', 'level2'].includes(level) || (level === 'level1' && (isNaN(credit_limit) || credit_limit < 0))) {
+        return res.status(400).json({ error: 'Invalid user data. New username, password, level (level1 or level2), and credit_limit (non-negative for level1) required.' });
     }
 
     try {
@@ -453,7 +464,14 @@ app.post('/admin/users/:username', requireAuth, requireAdmin, async (req, res) =
         }
 
         const updatedUsers = users.map(user =>
-            user.username === username ? { username: newUsername, password, balance: user.balance, level, total_sales: user.total_sales } : user
+            user.username === username ? {
+                username: newUsername,
+                password,
+                balance: user.balance,
+                level,
+                total_sales: user.total_sales,
+                credit_limit: level === 'level1' ? parseInt(credit_limit, 10) : 0
+            } : user
         );
         await updateUsers(updatedUsers);
 
@@ -498,6 +516,33 @@ app.post('/admin/users/:username/balance', requireAuth, requireAdmin, async (req
     } catch (error) {
         console.error('Error adjusting balance:', error);
         res.status(500).json({ error: 'Failed to adjust balance' });
+    }
+});
+
+// Admin: Make Payment
+app.post('/admin/users/:username/pay', requireAuth, requireAdmin, async (req, res) => {
+    const { username } = req.params;
+    const { amount } = req.body;
+    if (isNaN(amount) || amount <= 0) {
+        return res.status(400).json({ error: 'Invalid payment amount. Must be a positive number.' });
+    }
+
+    try {
+        const users = await readUsers();
+        const user = users.find(u => u.username === username);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        if (user.level !== 'level1') {
+            return res.status(400).json({ error: 'Payments are only applicable to Level 1 (Credit) users' });
+        }
+
+        const newBalance = user.balance - amount;
+        await updateUserBalanceAndSales(username, newBalance, user.total_sales);
+        res.json({ success: true, balance: newBalance, message: `Payment of ${amount} applied successfully` });
+    } catch (error) {
+        console.error('Error processing payment:', error);
+        res.status(500).json({ error: 'Failed to process payment' });
     }
 });
 

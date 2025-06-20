@@ -6,7 +6,7 @@
     <title>Admin Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             background: #ffffff;
@@ -19,11 +19,11 @@
         .container {
             max-width: 90rem;
             margin: 0 auto;
-            padding: 2rem 1rem;
+            padding: 1.5rem 1rem;
         }
         .header {
             background: #ffffff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             padding: 0.5rem 1rem;
             position: sticky;
             top: 0;
@@ -35,12 +35,12 @@
         .card {
             background: #ffffff;
             border: 1px solid #e5e5e5;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             transition: box-shadow 0.2s ease;
         }
         .card:hover {
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .user-table, .license-table {
             width: 100%;
@@ -48,20 +48,20 @@
             background: #ffffff;
         }
         .user-table th, .license-table th {
-            background: #f7f7f7;
-            color: #000000;
-            font-weight: 600;
-            font-size: 0.875rem;
-            padding: 1rem;
+            background: #f9f9f9;
+            color: #333333;
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 0.75rem;
             text-align: left;
-            border-bottom: 2px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
             position: sticky;
             top: 0;
             z-index: 10;
         }
         .user-table td, .license-table td {
-            padding: 0.75rem 1rem;
-            font-size: 0.875rem;
+            padding: 0.75rem;
+            font-size: 0.85rem;
             border-bottom: 1px solid #e5e5e5;
         }
         .user-table tr:hover, .license-table tr:hover {
@@ -70,14 +70,14 @@
         .mobile-user-list, .mobile-license-list {
             display: none;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.75rem;
         }
         .mobile-user-card, .mobile-license-card {
             background: #ffffff;
             border: 1px solid #e5e5e5;
             border-radius: 0.5rem;
-            padding: 1rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 0.75rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
         .mobile-user-header, .mobile-license-header {
             display: flex;
@@ -86,15 +86,15 @@
             margin-bottom: 0.5rem;
         }
         .mobile-user-username, .mobile-license-key {
-            font-weight: 600;
-            font-size: 0.875rem;
+            font-weight: 500;
+            font-size: 0.85rem;
             color: #333333;
             word-break: break-word;
             max-width: 60%;
         }
         .mobile-user-details, .mobile-license-details {
             display: none;
-            margin-top: 0.75rem;
+            margin-top: 0.5rem;
             font-size: 0.75rem;
             animation: slideDown 0.3s ease-out;
         }
@@ -104,10 +104,10 @@
         .mobile-user-field, .mobile-license-field {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
         .mobile-user-field-label, .mobile-license-field-label {
-            font-weight: 600;
+            font-weight: 500;
             color: #333333;
             width: 40%;
         }
@@ -119,57 +119,35 @@
             -webkit-overflow-scrolling: touch;
         }
         .mobile-user-field-value::-webkit-scrollbar, .mobile-license-field-value::-webkit-scrollbar {
-            height: 4px;
+            height: 3px;
         }
         .mobile-user-field-value::-webkit-scrollbar-thumb, .mobile-license-field-value::-webkit-scrollbar-thumb {
             background: #e5e5e5;
-            border-radius: 2px;
+            border-radius: 1.5px;
         }
-        .btn-primary {
+        .btn-primary, .btn-info, .btn-success, .btn-danger {
             background: #333333;
             color: #ffffff;
             border: none;
-            padding: 0.5rem 1.5rem;
-            border-radius: 0.375rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.25rem;
             font-weight: 500;
+            font-size: 0.75rem;
             transition: background 0.2s ease;
         }
-        .btn-primary:hover {
-            background: #000000;
+        .btn-primary:hover, .btn-info:hover, .btn-success:hover, .btn-danger:hover {
+            background: #1a1a1a;
         }
-        .btn-danger {
-            background: #333333;
-            color: #ffffff;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            font-weight: 500;
-            transition: background 0.2s ease;
-        }
-        .btn-danger:hover {
-            background: #000000;
-        }
-        .btn-success, .btn-info, .btn-warning {
-            background: #333333;
-            color: #ffffff;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            font-weight: 500;
-            transition: background 0.2s ease;
-        }
-        .btn-success:hover, .btn-info:hover, .btn-warning:hover {
-            background: #000000;
-        }
-        .btn-outline-primary, .btn-outline-danger {
+        .btn-outline-primary {
             border: 1px solid #333333;
             color: #333333;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.25rem;
             font-weight: 500;
+            font-size: 0.75rem;
             transition: all 0.2s ease;
         }
-        .btn-outline-primary:hover, .btn-outline-danger:hover {
+        .btn-outline-primary:hover {
             background: #333333;
             color: #ffffff;
         }
@@ -177,17 +155,17 @@
             background: #ffffff;
             border: 1px solid #e5e5e5;
             color: #333333;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.25rem;
             font-weight: 500;
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             transition: all 0.2s ease;
             position: relative;
             cursor: pointer;
         }
         .btn-profile:hover {
             background: #f7f7f7;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
         .profile-dropdown {
             display: none;
@@ -197,9 +175,9 @@
             background: #ffffff;
             border: 1px solid #e5e5e5;
             border-radius: 0.5rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             z-index: 100;
-            min-width: 12rem;
+            min-width: 10rem;
             padding: 0.5rem;
         }
         .profile-dropdown.active {
@@ -207,7 +185,7 @@
         }
         .profile-dropdown-item {
             padding: 0.5rem 1rem;
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             color: #333333;
             cursor: pointer;
             transition: background 0.2s ease;
@@ -231,9 +209,9 @@
         .alert {
             display: none;
             border: 1px solid #333333;
-            border-radius: 0.375rem;
-            padding: 1rem;
-            font-size: 0.875rem;
+            border-radius: 0.25rem;
+            padding: 0.75rem;
+            font-size: 0.75rem;
             background: #ffffff;
             color: #000000;
             animation: slideIn 0.3s ease-out;
@@ -248,36 +226,40 @@
         }
         .form-control, .form-select {
             border: 1px solid #e5e5e5;
-            border-radius: 0.375rem;
-            padding: 0.75rem;
-            font-size: 0.875rem;
+            border-radius: 0.25rem;
+            padding: 0.4rem;
+            font-size: 0.75rem;
             transition: border-color 0.2s ease;
             background: #ffffff;
         }
         .form-control:focus, .form-select:focus {
             border-color: #333333;
-            box-shadow: 0 0 0 2px rgba(51, 51, 51, 0.1);
+            box-shadow: 0 0 0 1px rgba(51, 51, 51, 0.1);
         }
         .modal-content {
             border: 1px solid #e5e5e5;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             background: #ffffff;
         }
         .modal-header, .modal-footer {
             border: none;
+            padding: 0.75rem 1rem;
+        }
+        .modal-body {
+            padding: 1rem;
         }
         .balance-info {
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             color: #333333;
         }
         .balance-value {
-            font-size: 1.125rem;
-            font-weight: 700;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
         @media (max-width: 768px) {
             .container {
-                padding: 1rem;
+                padding: 1rem 0.5rem;
             }
             .header {
                 flex-direction: column;
@@ -291,18 +273,20 @@
             .mobile-user-list, .mobile-license-list {
                 display: flex;
             }
-            .btn-sm {
-                font-size: 0.75rem;
-                padding: 0.5rem 1rem;
-                min-width: 4rem;
+            .btn-primary, .btn-info, .btn-success, .btn-danger, .btn-outline-primary {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.6rem;
             }
             .profile-dropdown {
                 right: 0.5rem;
-                min-width: 10rem;
+                min-width: 8rem;
             }
             .form-control, .form-select {
-                font-size: 0.75rem;
-                padding: 0.5rem;
+                font-size: 0.7rem;
+                padding: 0.3rem;
+            }
+            .modal-dialog {
+                margin: 0.5rem;
             }
         }
         @media (min-width: 769px) {
@@ -318,8 +302,8 @@
 <body>
     <div class="header">
         <div class="container d-flex justify-content-between align-items-center">
-            <h1 class="text-2xl font-bold">Admin Panel</h1>
-            <div class="flex items-center space-x-4">
+            <h1 class="text-xl font-semibold">Admin Panel</h1>
+            <div class="flex items-center space-x-3">
                 <div class="balance-info">
                     <span id="balanceTitle" class="font-medium">Current Balance:</span>
                     <span id="balance" class="balance-value">0</span>
@@ -344,11 +328,11 @@
         <div id="errorAlert" class="alert" role="alert"></div>
 
         <!-- Users Section -->
-        <div class="card mb-4">
-            <div class="card-body p-6">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="text-lg font-semibold">Manage Users</h5>
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
+        <div class="card mb-3">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="text-md font-semibold">Manage Users</h5>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
                 </div>
                 <div class="table-responsive">
                     <!-- Desktop Table -->
@@ -357,14 +341,15 @@
                             <tr>
                                 <th>Username</th>
                                 <th>Password</th>
-                                <th>Balance</th>
                                 <th>Level</th>
+                                <th>Credit Limit</th>
+                                <th>Balance</th>
                                 <th>Total Sales</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="userTableBody">
-                            <tr><td colspan="6" class="text-center">Loading users...</td></tr>
+                            <tr><td colspan="7" class="text-center">Loading users...</td></tr>
                         </tbody>
                     </table>
                     <!-- Mobile List -->
@@ -383,22 +368,26 @@
                     </div>
                     <div class="modal-body">
                         <form id="addUserForm">
-                            <div class="mb-3">
-                                <label for="newUsername" class="form-label">Username</label>
+                            <div class="mb-2">
+                                <label for="newUsername" class="form-label text-sm">Username</label>
                                 <input type="text" class="form-control" id="newUsername" required>
                             </div>
-                            <div class="mb-3">
-                                <label for="newPassword" class="form-label">Password</label>
+                            <div class="mb-2">
+                                <label for="newPassword" class="form-label text-sm">Password</label>
                                 <input type="text" class="form-control" id="newPassword" required>
                             </div>
-                            <div class="mb-3">
-                                <label for="newLevel" class="form-label">Level</label>
-                                <select class="form-select" id="newLevel" required>
+                            <div class="mb-2">
+                                <label for="newLevel" class="form-label text-sm">Level</label>
+                                <select class="form-select" id="newLevel" required onchange="toggleCreditLimit()">
                                     <option value="level1">Level 1 (Credit)</option>
                                     <option value="level2">Level 2 (Prepaid)</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary">Add User</button>
+                            <div class="mb-2" id="creditLimitGroup">
+                                <label for="newCreditLimit" class="form-label text-sm">Credit Limit</label>
+                                <input type="number" class="form-control" id="newCreditLimit" min="0" placeholder="Enter credit limit" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Add User</button>
                         </form>
                     </div>
                 </div>
@@ -440,7 +429,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -461,14 +450,14 @@
         } else {
             document.getElementById('profileButton').textContent = `${username}`;
             document.getElementById('balance').textContent = balance || 0;
-            document.getElementById('balanceTitle').textContent = userLevel === 'level1' ? 'Due Balance:' : 'Current Balance:';
+            document.getElementById('balanceTitle').textContent = userLevel === 'level1' ? `Owed: ${balance > 0 ? '+' : ''}` : 'Current Balance:';
         }
 
         function showError(message) {
             const alert = document.getElementById('errorAlert');
             alert.textContent = message;
             alert.style.display = 'block';
-            setTimeout(() => alert.style.display = 'none', 7000);
+            setTimeout(() => alert.style.display = 'none', 5000);
         }
 
         function logout() {
@@ -494,14 +483,12 @@
                     headers: { 'X-Session-ID': sessionId }
                 });
                 if (!response.ok) {
-                    if (response.status === 401) {
-                        logout();
-                    }
-                    const errorText = await response.text();
-                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                    if (response.status === 401) logout();
+                    throw new Error(`HTTP ${response.status}: ${await response.text()}`);
                 }
                 const data = await response.json();
                 document.getElementById('balance').textContent = data.balance || 0;
+                document.getElementById('balanceTitle').textContent = userLevel === 'level1' ? `Owed: ${data.balance > 0 ? '+' : ''}` : 'Current Balance:';
                 document.getElementById('totalSales').textContent = data.total_sales || 0;
                 localStorage.setItem('balance', data.balance);
             } catch (error) {
@@ -518,19 +505,16 @@
                     headers: { 'X-Session-ID': sessionId }
                 });
                 if (!response.ok) {
-                    if (response.status === 401 || response.status === 403) {
-                        logout();
-                    }
-                    const errorText = await response.text();
-                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                    if (response.status === 401 || response.status === 403) logout();
+                    throw new Error(`HTTP ${response.status}: ${await response.text()}`);
                 }
                 const data = await response.json();
-                console.log('Users data:', data); // Debug
+                console.log('Users data:', data);
                 tableBody.innerHTML = '';
                 mobileList.innerHTML = '';
                 if (data.users && Array.isArray(data.users)) {
                     if (data.users.length === 0) {
-                        tableBody.innerHTML = '<tr><td colspan="6" class="text-center">No users found.</td></tr>';
+                        tableBody.innerHTML = '<tr><td colspan="7" class="text-center">No users found.</td></tr>';
                         mobileList.innerHTML = '<div class="text-center text-sm text-gray-500">No users found.</div>';
                     } else {
                         data.users.forEach((user) => {
@@ -540,19 +524,22 @@
                             row.innerHTML = `
                                 <td><input type="text" class="form-control form-control-sm" value="${user.username}" data-field="username"></td>
                                 <td><input type="text" class="form-control form-control-sm" value="${user.password}" data-field="password"></td>
-                                <td>${user.balance}</td>
                                 <td>
-                                    <select class="form-select form-select-sm" data-field="level">
+                                    <select class="form-select form-select-sm" data-field="level" onchange="toggleCreditLimitDesktop(this, '${user.username}')">
                                         <option value="level1" ${user.level === 'level1' ? 'selected' : ''}>Level 1 (Credit)</option>
                                         <option value="level2" ${user.level === 'level2' ? 'selected' : ''}>Level 2 (Prepaid)</option>
                                     </select>
                                 </td>
+                                <td id="credit-limit-cell-${user.username}">
+                                    ${user.level === 'level1' ? `<input type="number" class="form-control form-control-sm" value="${user.credit_limit}" data-field="credit_limit">` : 'N/A'}
+                                </td>
+                                <td>${user.level === 'level1' && user.balance > 0 ? '+' : ''}${user.balance}</td>
                                 <td>${user.total_sales}</td>
                                 <td>
-                                    <button class="btn btn-primary btn-sm me-1" onclick="updateUser('${user.username}', this)">Update</button>
-                                    <button class="btn btn-info btn-sm me-1" onclick="viewLicenses('${user.username}')">View Licenses</button>
-                                    <button class="btn btn-success btn-sm me-1" onclick="adjustBalance('${user.username}', 'add')">Add</button>
-                                    <button class="btn btn-warning btn-sm" onclick="adjustBalance('${user.username}', 'subtract')">Subtract</button>
+                                    <button class="btn btn-primary btn-sm me-1" onclick="updateUser(this, '${user.username}')" title="Save changes">Update</button>
+                                    <button class="btn btn-info btn-sm me-1" onclick="viewLicenses('${user.username}')">Licenses</button>
+                                    <button class="btn btn-success btn-sm me-1" onclick="promptBalance('${user.username}', 'add')">Add</button>
+                                    <button class="btn btn-danger btn-sm" onclick="promptBalance('${user.username}', 'subtract')">Subtract</button>
                                 </td>
                             `;
                             tableBody.appendChild(row);
@@ -568,26 +555,41 @@
                                 </div>
                                 <div class="mobile-user-field">
                                     <span class="mobile-user-field-label">Balance:</span>
-                                    <span class="mobile-user-field-value">${user.balance}</span>
+                                    <span class="mobile-user-field-value">${user.level === 'level1' && user.balance > 0 ? '+' : ''}${user.balance}</span>
+                                </div>
+                                <div class="mobile-user-field">
+                                    <span class="mobile-user-field-label">Level:</span>
+                                    <span class="mobile-user-field-value">${user.level === 'level1' ? 'Level 1 (Credit)' : 'Level 2 (Prepaid)'}</span>
                                 </div>
                                 <button class="btn-toggle" onclick="toggleUserDetails('${user.username}')">Show Details</button>
                                 <div class="mobile-user-details" id="user-details-${user.username}">
                                     <div class="mobile-user-field">
+                                        <span class="mobile-user-field-label">Username:</span>
+                                        <input type="text" class="form-control form-control-sm mobile-user-field-value" value="${user.username}" data-field="username">
+                                    </div>
+                                    <div class="mobile-user-field">
                                         <span class="mobile-user-field-label">Password:</span>
-                                        <span class="mobile-user-field-value">${user.password}</span>
+                                        <input type="text" class="form-control form-control-sm mobile-user-field-value" value="${user.password}" data-field="password">
                                     </div>
                                     <div class="mobile-user-field">
                                         <span class="mobile-user-field-label">Level:</span>
-                                        <span class="mobile-user-field-value">${user.level === 'level1' ? 'Level 1 (Credit)' : 'Level 2 (Prepaid)'}</span>
+                                        <select class="form-select form-select-sm mobile-user-field-value" data-field="level" onchange="toggleCreditLimitMobile(this, '${user.username}')">
+                                            <option value="level1" ${user.level === 'level1' ? 'selected' : ''}>Level 1 (Credit)</option>
+                                            <option value="level2" ${user.level === 'level2' ? 'selected' : ''}>Level 2 (Prepaid)</option>
+                                        </select>
+                                    </div>
+                                    <div class="mobile-user-field" id="mobile-credit-limit-field-${user.username}">
+                                        <span class="mobile-user-field-label">Credit Limit:</span>
+                                        ${user.level === 'level1' ? `<input type="number" class="form-control form-control-sm mobile-user-field-value" value="${user.credit_limit}" data-field="credit_limit">` : '<span class="mobile-user-field-value">N/A</span>'}
                                     </div>
                                     <div class="mobile-user-field">
                                         <span class="mobile-user-field-label">Total Sales:</span>
                                         <span class="mobile-user-field-value">${user.total_sales}</span>
                                     </div>
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); updateUser('${user.username}', this.closest('.mobile-user-card').querySelector('.btn-primary'))">Update</button>
-                                        <button class="btn btn-success btn-sm" onclick="event.stopPropagation(); adjustBalance('${user.username}', 'add')">Add Balance</button>
-                                        <button class="btn btn-warning btn-sm" onclick="event.stopPropagation(); adjustBalance('${user.username}', 'subtract')">Subtract Balance</button>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); updateUserMobile('${user.username}')">Update</button>
+                                        <button class="btn btn-success btn-sm" onclick="event.stopPropagation(); promptBalance('${user.username}', 'add')">Add Balance</button>
+                                        <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); promptBalance('${user.username}', 'subtract')">Subtract Balance</button>
                                     </div>
                                 </div>
                             `;
@@ -615,11 +617,55 @@
             }
         }
 
-        async function updateUser(originalUsername, button) {
-            const container = button.closest('tr') || button.closest('.mobile-user-card');
-            const newUsername = container.querySelector('[data-field="username"]')?.value || originalUsername;
-            const password = container.querySelector('[data-field="password"]')?.value || '';
-            const level = container.querySelector('[data-field="level"]')?.value || 'level1';
+        function toggleCreditLimit() {
+            const level = document.getElementById('newLevel').value;
+            const creditLimitGroup = document.getElementById('creditLimitGroup');
+            const creditLimitInput = document.getElementById('newCreditLimit');
+            creditLimitGroup.style.display = level === 'level1' ? 'block' : 'none';
+            creditLimitInput.required = level === 'level1';
+            if (level === 'level2') creditLimitInput.value = '';
+        }
+
+        function toggleCreditLimitDesktop(select, username) {
+            const level = select.value;
+            const cell = document.getElementById(`credit-limit-cell-${username}`);
+            if (level === 'level1') {
+                cell.innerHTML = `<input type="number" class="form-control form-control-sm" value="1000" data-field="credit_limit">`;
+            } else {
+                cell.innerHTML = 'N/A';
+            }
+        }
+
+        function toggleCreditLimitMobile(select, username) {
+            const level = select.value;
+            const field = document.getElementById(`mobile-credit-limit-field-${username}`);
+            if (level === 'level1') {
+                field.innerHTML = `
+                    <span class="mobile-user-field-label">Credit Limit:</span>
+                    <input type="number" class="form-control form-control-sm mobile-user-field-value" value="1000" data-field="credit_limit">
+                `;
+            } else {
+                field.innerHTML = `
+                    <span class="mobile-user-field-label">Credit Limit:</span>
+                    <span class="mobile-user-field-value">N/A</span>
+                `;
+            }
+        }
+
+        async function updateUser(button, originalUsername) {
+            const row = button.closest('tr');
+            const newUsername = row.querySelector('[data-field="username"]').value;
+            const password = row.querySelector('[data-field="password"]').value;
+            const level = row.querySelector('[data-field="level"]').value;
+            let credit_limit = level === 'level1' ? row.querySelector('[data-field="credit_limit"]')?.value : 0;
+
+            if (level === 'level1' && (!credit_limit || isNaN(credit_limit) || credit_limit <= 0)) {
+                credit_limit = prompt('Enter a valid credit limit for Level 1:', '1000');
+                if (!credit_limit || isNaN(credit_limit) || credit_limit <= 0) {
+                    showError('Invalid credit limit');
+                    return;
+                }
+            }
 
             try {
                 const response = await fetch(`${API_BASE_URL}/admin/users/${originalUsername}`, {
@@ -628,7 +674,45 @@
                         'Content-Type': 'application/json',
                         'X-Session-ID': sessionId
                     },
-                    body: JSON.stringify({ newUsername, password, level })
+                    body: JSON.stringify({ newUsername, password, level, credit_limit: parseInt(credit_limit, 10) })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('User updated successfully');
+                    loadUsers();
+                } else {
+                    console.error('Update user error response:', data);
+                    showError(`Error updating user: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error updating user:', error);
+                showError(`Server error during user update: ${error.message}`);
+            }
+        }
+
+        async function updateUserMobile(originalUsername) {
+            const card = document.querySelector(`.mobile-user-card[data-username="${originalUsername}"]`);
+            const newUsername = card.querySelector('[data-field="username"]').value;
+            const password = card.querySelector('[data-field="password"]').value;
+            const level = card.querySelector('[data-field="level"]').value;
+            let credit_limit = level === 'level1' ? card.querySelector('[data-field="credit_limit"]')?.value : 0;
+
+            if (level === 'level1' && (!credit_limit || isNaN(credit_limit) || credit_limit <= 0)) {
+                credit_limit = prompt('Enter a valid credit limit for Level 1:', '1000');
+                if (!credit_limit || isNaN(credit_limit) || credit_limit <= 0) {
+                    showError('Invalid credit limit');
+                    return;
+                }
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/users/${originalUsername}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Session-ID': sessionId
+                    },
+                    body: JSON.stringify({ newUsername, password, level, credit_limit: parseInt(credit_limit, 10) })
                 });
                 const data = await response.json();
                 if (data.success) {
@@ -645,7 +729,7 @@
         }
 
         async function adjustBalance(username, operation) {
-            const amount = prompt(`Enter amount to ${operation} for ${username}:`);
+            const amount = prompt(`Enter amount to ${operation} balance for ${username}:`);
             if (!amount || isNaN(amount) || amount < 0) {
                 showError('Invalid amount');
                 return;
@@ -674,6 +758,10 @@
             }
         }
 
+        function promptBalance(username, operation) {
+            adjustBalance(username, operation);
+        }
+
         async function viewLicenses(username) {
             try {
                 const modalLabel = document.getElementById('licenseModalLabel');
@@ -687,11 +775,10 @@
                     headers: { 'X-Session-ID': sessionId }
                 });
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                    throw new Error(`HTTP ${response.status}: ${await response.text()}`);
                 }
                 const data = await response.json();
-                console.log('Licenses data for user:', data); // Debug
+                console.log('Licenses data for user:', data);
                 modalBody.innerHTML = '';
                 mobileList.innerHTML = '';
                 if (data.licenses && Array.isArray(data.licenses)) {
@@ -796,6 +883,7 @@
             const username = document.getElementById('newUsername').value;
             const password = document.getElementById('newPassword').value;
             const level = document.getElementById('newLevel').value;
+            const credit_limit = level === 'level1' ? document.getElementById('newCreditLimit').value : 0;
 
             try {
                 const response = await fetch(`${API_BASE_URL}/admin/users`, {
@@ -804,15 +892,16 @@
                         'Content-Type': 'application/json',
                         'X-Session-ID': sessionId
                     },
-                    body: JSON.stringify({ username, password, level })
+                    body: JSON.stringify({ username, password, level, credit_limit: parseInt(credit_limit, 10) })
                 });
                 const data = await response.json();
-                console.log('Add user response:', data); // Debug
+                console.log('Add user response:', data);
                 if (data.success) {
                     alert('User created successfully');
                     loadUsers();
                     bootstrap.Modal.getInstance(document.getElementById('addUserModal')).hide();
                     document.getElementById('addUserForm').reset();
+                    toggleCreditLimit();
                 } else {
                     console.error('Create user error response:', data);
                     showError(`Error creating user: ${data.error}`);
@@ -826,6 +915,7 @@
         // Initial load
         loadBalance();
         loadUsers();
+        toggleCreditLimit();
     </script>
 </body>
 </html>
