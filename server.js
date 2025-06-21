@@ -15,7 +15,7 @@ app.use(express.json());
 const sessions = {};
 const licenseCache = new Map();
 
-const API_URL = 'https://xapilethalxvision.global.ssl.fastly.net/';
+const API_URL = 'http://127.0.0.1:8555/';
 const AUTH_TOKEN = 'DDJgwS2wUIoKnIn9qkc0yqMarrhf59XaaZe79I0A5NC49QBLqlN7aD5PnvqvtCAQ';
 const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36';
 const LICENSES_CSV = 'licenses.csv';
